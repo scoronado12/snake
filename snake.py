@@ -14,6 +14,7 @@ class Snake:
     def __init__(self):
         self.length = 1 
         self.points = 0
+        self.direction = Direction.UP
 
     def eat(self):
         self.length += 1
@@ -27,9 +28,15 @@ class Snake:
     
     def get_symbol(self):
         return 'S'
+    
+    def get_direction(self):
+        return self.direction
 
+    def set_direction(self, new_dir):
+        self.Direction = new_dir
 
 class Board:
+    snake_obj = None
     def __init__(self):
         #Board is 31x21
         self.board = [['_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_'],
@@ -63,7 +70,6 @@ class Board:
                       ['_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_'],
                       ['_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_'],
                       ['_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_']]
-
         
     def gen_apple(self):
          self.board[random.randint(1,28)][random.randint(1,18)] = 'o'
@@ -93,6 +99,9 @@ class Board:
         self.board[pos[0]][pos[1]] = '_'
         self.board[row][col] = 'S'
 
+    def get_snake(self):
+        return self.snake_obj
+
 
     def move_snake(self, direction):
         pos = self.get_snake_pos()
@@ -108,21 +117,20 @@ class Board:
 
     def check_apple(self):
         if self.get_apple_pos() is None:
-            self.snake_obj.eat() 
-    
-    def get_snake(self):
-        return self.snake_obj
-                
+            print("Eat apple")
+            self.get_snake().eat()
+            self.gen_apple()
+
+    def curr_direction(self):
+        pass     
 
 def main():
-
     local_board = Board()
     local_board.gen_apple()
     local_board.gen_snake()
     
 
     while True:
-        
         local_board.show_board()
 
         snake_dir = input("Direction? > ")
@@ -144,9 +152,9 @@ def main():
         else:
             print("Invalid")
         
-        print("Snake @ " + str(local_board.get_snake_pos()))
-        print("Apple @ " + str(local_board.get_apple_pos()))
-        print("Score @ " + str(local_board.snake_obj.get_points())) 
+        print("Score > " + str(local_board.snake_obj.get_points()))
+
         local_board.check_apple()
+
 
 main()
