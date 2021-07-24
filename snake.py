@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
 import random
+import enum
 
-class Directions(Enum):
+class Direction(enum.Enum):
         LEFT = 0
         RIGHT = 1
         UP = 2
@@ -86,9 +87,32 @@ class Board:
             for j in range(len(self.board[i])):
                 if self.board[i][j] == 'o':
                     return (i, j)
-    
+
+    def set_snake_pos(self, row, col):
+        pos = self.get_snake_pos()
+        self.board[pos[0]][pos[1]] = '_'
+        self.board[row][col] = 'S'
+
+
     def move_snake(self, direction):
-       pass       
+        pos = self.get_snake_pos()
+
+        if direction == Direction.UP:
+            self.set_snake_pos(pos[0]-1,pos[1])
+        elif direction == Direction.DOWN:
+            self.set_snake_pos(pos[0]+1,pos[1])
+        elif direction == Direction.RIGHT:
+            self.set_snake_pos(pos[0],pos[1]+1)
+        elif direction == Direction.LEFT:
+            self.set_snake_pos(pos[0],pos[1]-1)
+
+    def check_apple(self):
+        if self.get_apple_pos() is None:
+            self.snake_obj.eat() 
+    
+    def get_snake(self):
+        return self.snake_obj
+                
 
 def main():
 
@@ -102,19 +126,27 @@ def main():
         local_board.show_board()
 
         snake_dir = input("Direction? > ")
-        if snake_dir == "left":
+        if snake_dir == "left" or snake_dir == 'a':
             print("Move Left")
-        elif snake_dir == "right":
+            local_board.move_snake(Direction.LEFT)
+        elif snake_dir == "right" or snake_dir == 'd':
             print("Move Right")
-        elif snake_dir == "up":
+            local_board.move_snake(Direction.RIGHT)
+        elif snake_dir == "up" or snake_dir == 'w': 
             print("Move Up")
-        elif snake_dir == "down":
+            local_board.move_snake(Direction.UP)
+        elif snake_dir == "down" or snake_dir == 's':
             print("Move Down")
+            local_board.move_snake(Direction.DOWN)
+        elif snake_dir == "exit":
+            print("Done")
+            exit(0)
         else:
             print("Invalid")
         
-        print("Snake @ :" + str(local_board.get_snake_pos()))
-        print("Apple @ :" + str(local_board.get_apple_pos()))
-
+        print("Snake @ " + str(local_board.get_snake_pos()))
+        print("Apple @ " + str(local_board.get_apple_pos()))
+        print("Score @ " + str(local_board.snake_obj.get_points())) 
+        local_board.check_apple()
 
 main()
