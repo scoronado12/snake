@@ -2,6 +2,12 @@
 
 import random
 
+class Directions(Enum):
+        LEFT = 0
+        RIGHT = 1
+        UP = 2
+        DOWN = 3
+
 
 class Snake:
     def __init__(self):
@@ -70,15 +76,27 @@ class Board:
     
 
     def get_snake_pos(self):
-        for i in self.board()
-        return (0,0)
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                if self.board[i][j] == 'S':
+                    return (i, j)
+
+    def get_apple_pos(self):
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                if self.board[i][j] == 'o':
+                    return (i, j)
+    
+    def move_snake(self, direction):
+       pass       
 
 def main():
 
     local_board = Board()
     local_board.gen_apple()
     local_board.gen_snake()
-   
+    
+
     while True:
         
         local_board.show_board()
@@ -94,8 +112,9 @@ def main():
             print("Move Down")
         else:
             print("Invalid")
-
-
+        
+        print("Snake @ :" + str(local_board.get_snake_pos()))
+        print("Apple @ :" + str(local_board.get_apple_pos()))
 
 
 main()
